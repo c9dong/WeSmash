@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
+	public int playerNumber;
+
 	public float verticalSpeed;             //Floating point variable to store the player's movement speed.
 	public float horizontalSpeed;
 	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
@@ -18,6 +20,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		//Get and store a reference to the Rigidbody2D component so that we can access it.
 		rb2d = GetComponent<Rigidbody2D> ();
+		rb2d.gravityScale = 3;
 	}
 
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
@@ -34,24 +37,24 @@ public class PlayerController : MonoBehaviour {
 			return;
 		}
 
-		float v = Input.GetAxis (verticalCtrl);
-		if (v < 0) {
-			transform.rotation = Quaternion.Euler (0, 0, 180);
-			rb2d.velocity = new Vector2 (rb2d.velocity.x, -verticalSpeed);
-			rb2d.gravityScale = -3;
-		} else if(v > 0) {
-			transform.rotation = Quaternion.Euler (0, 0, 0);
-			rb2d.velocity = new Vector2(rb2d.velocity.x, verticalSpeed);
-			rb2d.gravityScale = 3;
-		}
+		// float v = Input.GetAxis (verticalCtrl);
+		// if (v < 0) {
+		// 	transform.rotation = Quaternion.Euler (0, 0, 180);
+		// 	rb2d.velocity = new Vector2 (rb2d.velocity.x, -verticalSpeed);
+		// 	rb2d.gravityScale = -3;
+		// } else if(v > 0) {
+		// 	transform.rotation = Quaternion.Euler (0, 0, 0);
+		// 	rb2d.velocity = new Vector2(rb2d.velocity.x, verticalSpeed);
+		// 	rb2d.gravityScale = 3;
+		// }
 
 
-		float h = Input.GetAxis(horizontalCtrl);
-		if (h != 0.0)
-		{
-			rb2d.velocity = new Vector2(h*horizontalSpeed, rb2d.velocity.y);
+		// float h = Input.GetAxis(horizontalCtrl);
+		// if (h != 0.0)
+		// {
+		// 	rb2d.velocity = new Vector2(h*horizontalSpeed, rb2d.velocity.y);
 
-		}
+		// }
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
@@ -61,5 +64,17 @@ public class PlayerController : MonoBehaviour {
 			this.didCollide = true;
 			this.stunTime = 1.0f;
 		}
+	}
+
+	public void MoveHorizontal(int d) {
+		rb2d.velocity = new Vector2(d*horizontalSpeed, rb2d.velocity.y);
+	}
+
+	public void MoveVertical(int d) {
+		rb2d.velocity = new Vector2 (rb2d.velocity.x, d*verticalSpeed);
+	}
+
+	public void SetGravity(int d) {
+		rb2d.gravityScale = d*3;
 	}
 }

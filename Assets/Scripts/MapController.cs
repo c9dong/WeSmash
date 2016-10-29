@@ -76,11 +76,11 @@ public class MapController : MonoBehaviour {
 	}
 
 	void initPlayer() {
-		GameObject instance1 = Instantiate (player, new Vector3 (0, 0, 0), Quaternion.identity) as GameObject;
-		GameObject instance2 = Instantiate (player, new Vector3 (2, 0, 0), Quaternion.identity) as GameObject;
-		PlayerController p2 = instance2.GetComponent <PlayerController>();
-		p2.horizontalCtrl = "Horizontal_P2";
-		p2.verticalCtrl = "Vertical_P2";
+		for (int i = 0; i < 3; i++) {
+			GameObject instance = Instantiate (player, new Vector3 (-2 + i*2, 0, 0), Quaternion.identity) as GameObject;
+			PlayerController pc = instance.GetComponent <PlayerController>();
+			pc.playerNumber = i;
+		}
 	}
 
 	public void setupScene() {
