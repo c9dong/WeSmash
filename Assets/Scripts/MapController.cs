@@ -33,7 +33,11 @@ public class MapController : MonoBehaviour {
 	}
 
 	public void initPlayer() {
-		Instantiate (player, new Vector3 (0, 0, 0), Quaternion.identity);
+		GameObject instance1 = Instantiate (player, new Vector3 (0, 0, 0), Quaternion.identity) as GameObject;
+		GameObject instance2 = Instantiate (player, new Vector3 (2, 0, 0), Quaternion.identity) as GameObject;
+		PlayerController p2 = instance2.GetComponent <PlayerController>();
+		p2.horizontalCtrl = "Horizontal_P2";
+		p2.verticalCtrl = "Vertical_P2";
 	}
 
 	public void setupScene() {

@@ -3,9 +3,11 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	public float speed;             //Floating point variable to store the player's movement speed.
-
+	public float verticalSpeed;             //Floating point variable to store the player's movement speed.
+	public float horizontalSpeed;
 	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
+	public string horizontalCtrl = "Horizontal_P1";
+	public string verticalCtrl = "Vertical_P1";
 
 	// Use this for initialization
 	void Start()
@@ -17,16 +19,22 @@ public class PlayerController : MonoBehaviour {
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
 	void FixedUpdate()
 	{
-		//Store the current horizontal input in the float moveHorizontal.
-		float moveHorizontal = Input.GetAxis ("Horizontal");
+		float v = Input.GetAxis (verticalCtrl);
+		if (v < 0) {
+			transform.rotation = Quaternion.Euler (0, 0, 0);
+			rb2d.velocity = new Vector2 (rb2d.velocity.x, -verticalSpeed);
 
-		//Store the current vertical input in the float moveVertical.
-		float moveVertical = Input.GetAxis ("Vertical");
+		} else if(v > 0) {
+			transform.rotation = Quaternion.Euler (0, 0, 180);
+			rb2d.velocity = new Vector2(rb2d.velocity.x, verticalSpeed);
+		}
 
-		//Use the two store floats to create a new Vector2 variable movement.
-		Vector2 movement = new Vector2 (moveHorizontal, moveVertical);
 
-		//Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
-		rb2d.AddForce (movement * speed);
+		float h = Input.GetAxis(horizontalCtrl);
+		if (h != 0.0)
+		{
+			rb2d.velocity = new Vector2(h*horizontalSpeed, rb2d.velocity.y);
+
+		}
 	}
 }
