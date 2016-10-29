@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour {
 	public string verticalCtrl = "Vertical_P1";
 	public bool didCollide = false;
 	public float stunTime = 1.0f;
+	public Sprite normalSprite;
+	public Sprite stunnedSprite;
 
 	// Use this for initialization
 	void Start()
@@ -24,6 +26,8 @@ public class PlayerController : MonoBehaviour {
 		this.stunTime -= Time.deltaTime;
 		if (this.stunTime < 0) {
 			this.didCollide = false;
+			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
+			sr.sprite = normalSprite;
 		}
 
 		if (this.didCollide) {
@@ -52,8 +56,10 @@ public class PlayerController : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D collision) {
 		if (collision.gameObject.CompareTag("Player")) {
+			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
+			sr.sprite = stunnedSprite;
 			this.didCollide = true;
-			this.stunTime = 2.0f;
+			this.stunTime = 1.0f;
 		}
 	}
 }
