@@ -21,12 +21,13 @@ public class PlayerController : MonoBehaviour {
 	{
 		float v = Input.GetAxis (verticalCtrl);
 		if (v < 0) {
-			transform.rotation = Quaternion.Euler (0, 0, 0);
-			rb2d.velocity = new Vector2 (rb2d.velocity.x, -verticalSpeed);
-
-		} else if(v > 0) {
 			transform.rotation = Quaternion.Euler (0, 0, 180);
+			rb2d.velocity = new Vector2 (rb2d.velocity.x, -verticalSpeed);
+			rb2d.gravityScale = -3;
+		} else if(v > 0) {
+			transform.rotation = Quaternion.Euler (0, 0, 0);
 			rb2d.velocity = new Vector2(rb2d.velocity.x, verticalSpeed);
+			rb2d.gravityScale = 3;
 		}
 
 
