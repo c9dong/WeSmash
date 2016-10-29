@@ -30,6 +30,14 @@ public class MapController : MonoBehaviour {
 			instance1.transform.SetParent (boardHolder);
 			instance2.transform.SetParent (boardHolder);
 		}
+
+		for (int y = -rows / 2; y < rows / 2+1; y++) {
+			GameObject instance1 = Instantiate (floorTile, new Vector3 (-columns/2, y, 0f), Quaternion.identity) as GameObject;
+			GameObject instance2 = Instantiate (floorTile, new Vector3 (columns/2, y, 0f), Quaternion.identity) as GameObject;
+
+			instance1.transform.SetParent (boardHolder);
+			instance2.transform.SetParent (boardHolder);
+		}
 	}
 
 	public void initPlayer() {
