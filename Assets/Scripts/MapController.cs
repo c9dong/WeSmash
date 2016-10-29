@@ -80,7 +80,8 @@ public class MapController : MonoBehaviour {
 		GameObject instance2 = Instantiate (player, new Vector3 (2, 0, 0), Quaternion.identity) as GameObject;
 		PlayerController p2 = instance2.GetComponent <PlayerController>();
 		p2.horizontalCtrl = "Horizontal_P2";
-		p2.verticalCtrl = "Vertical_P2";
+		p2.jumpCtrl = "Jump_P2";
+		p2.toggleCtrl = "Toggle_P2";
 	}
 
 	public void setupScene() {
