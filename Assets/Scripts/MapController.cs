@@ -9,6 +9,10 @@ public class MapController : MonoBehaviour {
 
 	public GameObject floorTile;
 	public GameObject player;
+	public GameObject projectile;
+
+	private float projectileTime = 0;
+	private static readonly float PROJECTILE_INTERVAL = 2; // Generate projectile every 2 seconds
 
 	private Transform platformHolder;
 	private Transform boardHolder;
@@ -75,6 +79,26 @@ public class MapController : MonoBehaviour {
 		}
 	}
 
+	public void createProjectile() {
+		GameObject projectileObj = Instantiate (projectile, new Vector3 (0, 0, 0), Quaternion.identity) as GameObject;
+		ProjectileController projectileCtrl = projectileObj.GetComponent<ProjectileController> ();
+		projectileCtrl.isLeft = (Random.value >= 0.5);
+
+		float projectileX;
+		float projectileY = Random.Range (0, Screen.height);
+		if (projectileCtrl.isLeft) {
+			projectileX = 0.0F; 
+			projectileObj.transform.position = Camera.current.ScreenToWorldPoint (new Vector3 (projectileX, projectileY, Camera.current.nearClipPlane));
+			projectileObj.transform.position = new Vector3 (projectileObj.transform.position.x - projectileObj.GetComponent<Renderer>().bounds.size.x / 3, projectileObj.transform.position.y, projectileObj.transform.position.z); 
+		} else {
+			projectileX = Screen.width;
+			projectileObj.transform.position = Camera.current.ScreenToWorldPoint (new Vector3 (projectileX, projectileY, Camera.current.nearClipPlane));
+			projectileObj.transform.position = new Vector3 (projectileObj.transform.position.x + projectileObj.GetComponent<Renderer>().bounds.size.x / 3, projectileObj.transform.position.y, projectileObj.transform.position.z);
+		}
+
+		print("Create projectile (" + projectileX + "," + projectileY + ")");
+	}
+
 	void initPlayer() {
 		for (int i = 0; i < 3; i++) {
 			GameObject instance = Instantiate (player, new Vector3 (-2 + i*2, 0, 0), Quaternion.identity) as GameObject;
@@ -87,5 +111,12 @@ public class MapController : MonoBehaviour {
 		setupFloor ();
 		setupPlatform ();
 		initPlayer ();
+	}
+
+	void FixedUpdate() {
+		if (Time.time >= projectileTime && Camera.current != null) {
+			createProjectile();
+			projectileTime += PROJECTILE_INTERVAL;
+		}
 	}
 }
