@@ -7,25 +7,29 @@ public class PlayerController : MonoBehaviour {
 
 	public float verticalSpeed;             //Floating point variable to store the player's movement speed.
 	public float horizontalSpeed;
-	public float stunTimeDuration;
+	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
+	public string horizontalCtrl = "Horizontal_P1";
+	public string jumpCtrl = "Jump_P1";
+	public string toggleCtrl = "Toggle_P1";
+	public bool didCollide = false;
+	public float stunTime = 1.0f;
 	public Sprite normalSprite;
 	public Sprite stunnedSprite;
 	public GameObject deadPlayer;
-
-	private static float defaultGravityScale = 3;
-	
-	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
-	private bool orientation = true;	//true means upright, false means upside down
 	private bool jumped = false;
+	private GUIStyle style = new GUIStyle();
 
-	private float stunTime = -1;
+	void OnGUI() {
+		style.normal.textColor = Color.white;
+		GUI.Label(new Rect(Camera.main.WorldToScreenPoint(gameObject.transform.position).x - 25, Screen.height - Camera.main.WorldToScreenPoint(gameObject.transform.position).y - 50, 20, 20), "Player " + playerNumber.ToString(), style);
+	}
 
 	// Use this for initialization
 	void Start()
 	{
 		//Get and store a reference to the Rigidbody2D component so that we can access it.
 		rb2d = GetComponent<Rigidbody2D> ();
-		rb2d.gravityScale = defaultGravityScale;
+		rb2d.gravityScale = 3;
 	}
 
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
@@ -33,6 +37,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		this.stunTime -= Time.deltaTime;
 		if (this.stunTime < 0) {
+			this.didCollide = false;
 			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
 			sr.sprite = normalSprite;
 		}
@@ -51,9 +56,10 @@ public class PlayerController : MonoBehaviour {
 		if (collision.gameObject.CompareTag ("Player")) {
 			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
 			sr.sprite = stunnedSprite;
-			this.stunTime = this.stunTimeDuration;
+			this.didCollide = true;
+			this.stunTime = 1.5f;
 		} else if (collision.gameObject.CompareTag ("Floor")) {
-			this.jumped = false;
+			jumped = false;
 		}
 	}
 
@@ -65,7 +71,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	bool isStunned() {
-		return this.stunTime > 0;
+		return this.stunTime >= 0;
 	}
 
 	public void MoveHorizontal(int d) {
