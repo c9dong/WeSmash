@@ -8,11 +8,13 @@ public class MapController : MonoBehaviour {
 	public int columns = 10;
 
 	public GameObject floorTile;
-	public GameObject player;
+	public GameObject player1;
+	public GameObject player2;
+	public GameObject player3;
 	public GameObject projectile;
 
 	private float projectileTime = 0;
-	private static readonly float PROJECTILE_INTERVAL = 2; // Generate projectile every 2 seconds
+	private static readonly float PROJECTILE_INTERVAL = 1; // Generate projectile every 2 seconds
 
 	private Transform platformHolder;
 	private Transform boardHolder;
@@ -100,8 +102,9 @@ public class MapController : MonoBehaviour {
 	}
 
 	void initPlayer() {
+		GameObject[] players = { player1, player2, player3 };
 		for (int i = 0; i < 3; i++) {
-			GameObject instance = Instantiate (player, new Vector3 (-2 + i*2, 0, 0), Quaternion.identity) as GameObject;
+			GameObject instance = Instantiate (players[i], new Vector3 (-5 + i*5, 0, 0), Quaternion.identity) as GameObject;
 			PlayerController pc = instance.GetComponent <PlayerController>();
 			pc.playerNumber = i;
 		}
