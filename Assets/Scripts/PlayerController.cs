@@ -38,10 +38,13 @@ public class PlayerController : MonoBehaviour {
 			sr.sprite = normalSprite;
 		}
 
-		if (this.didCollide) {
-			return;
-		}
-
+		// Continuous edges
+		Vector3 cameraSize = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0.0f, 0.0f));
+		float x = rb2d.position.x;
+		x = x + cameraSize.x*3;
+		x = x % (cameraSize.x * 2);
+		x = x - cameraSize.x;
+		rb2d.position = new Vector3 (x, rb2d.position.y, 0);
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
@@ -50,21 +53,31 @@ public class PlayerController : MonoBehaviour {
 			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
 			sr.sprite = stunnedSprite;
 			this.didCollide = true;
-			this.stunTime = 2.0f;
+			this.stunTime = 1.5f;
 		} else if (collision.gameObject.CompareTag ("Floor")) {
 			jumped = false;
 		}
 	}
 
+	bool isStunned() {
+		return this.stunTime >= 0;
+	}
+
 	public void MoveHorizontal(int d) {
+		if (isStunned())
+			return;
 		rb2d.velocity = new Vector2(d*horizontalSpeed, rb2d.velocity.y);
 	}
 
 	public void MoveVertical(int d) {
+		if (isStunned ())
+			return;
 		rb2d.velocity = new Vector2 (rb2d.velocity.x, d*verticalSpeed);
 	}
 
 	public void Jump() {
+		if (isStunned ())
+			return;
 		if (!jumped) {
 			jumped = true;
 			rb2d.velocity = new Vector2 (rb2d.velocity.x, (rb2d.gravityScale < 0) ? -verticalSpeed : verticalSpeed);
@@ -72,6 +85,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void ToggleGravity() {
+		if (isStunned ())
+			return;
 		rb2d.gravityScale = -rb2d.gravityScale;
 		transform.rotation = Quaternion.Euler (0, 0, (rb2d.gravityScale < 0) ? 180 : 0);
 	}
