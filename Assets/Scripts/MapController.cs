@@ -11,6 +11,7 @@ public class MapController : MonoBehaviour {
 	public GameObject player1;
 	public GameObject player2;
 	public GameObject player3;
+	public GameObject player4;
 	public GameObject projectile;
 	public GameObject barrier;
 
@@ -102,8 +103,8 @@ public class MapController : MonoBehaviour {
 	}
 
 	void initPlayer() {
-		GameObject[] players = { player1, player2, player3 };
-		for (int i = 0; i < 3; i++) {
+		GameObject[] players = { player1, player2, player3, player4 };
+		for (int i = 0; i < 4; i++) {
 			GameObject instance = Instantiate (players[i], new Vector3 (-5 + i*5, 0, 0), Quaternion.identity) as GameObject;
 			PlayerController pc = instance.GetComponent <PlayerController>();
 			pc.playerNumber = i;
