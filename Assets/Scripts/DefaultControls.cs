@@ -9,29 +9,33 @@ public class DefaultControls {
 	private DefaultControls() {
 		keyBindings = new KeyBinding[4];
 
+		// Player 0 keybindings
 		keyBindings[0] = new KeyBinding(
 			KeyCode.UpArrow, 
 			KeyCode.DownArrow, 
 			KeyCode.LeftArrow, 
 			KeyCode.RightArrow);
 
+		// Player 1 keybindings
 		keyBindings[1] = new KeyBinding(
 			KeyCode.W, 
 			KeyCode.S, 
 			KeyCode.A, 
 			KeyCode.D);
 
+		// Player 2 keybindings
 		keyBindings[2] = new KeyBinding(
 			KeyCode.U, 
 			KeyCode.J, 
 			KeyCode.H, 
 			KeyCode.K);
 
-		// keyBindings[3] = new KeyBinding(
-		// 	KeyCode.UpArrow, 
-		// 	KeyCode.DownArrow, 
-		// 	KeyCode.LeftArrow, 
-		// 	KeyCode.RightArrow);
+		// Player 3 keybindings
+		keyBindings[3] = new KeyBinding(
+			KeyCode.JoystickButton0, 
+			KeyCode.JoystickButton1, 
+			KeyCode.JoystickButton2, 
+			KeyCode.JoystickButton3);
 	}
 
 	public static DefaultControls getInstance() {
