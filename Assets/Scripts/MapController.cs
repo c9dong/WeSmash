@@ -15,7 +15,8 @@ public class MapController : MonoBehaviour {
 	public GameObject barrier;
 
 	private float projectileTime = 0;
-	private static readonly float PROJECTILE_INTERVAL = 1; // Generate projectile every 2 seconds
+	private float PROJECTILE_INTERVAL = 5; // Generate projectile every 2 seconds
+	private float frameCounter = 0;
 
 	private Transform platformHolder;
 	private Transform boardHolder;
@@ -124,9 +125,11 @@ public class MapController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (Time.time >= projectileTime && Camera.current != null) {
+		frameCounter = frameCounter + (float)(0.02);
+		if (frameCounter >= projectileTime && Camera.current != null) {
 			createProjectile();
 			projectileTime += PROJECTILE_INTERVAL;
+			PROJECTILE_INTERVAL = 5 - Mathf.Pow(4, Mathf.Min(Mathf.Log10(projectileTime/10), 1));
 		}
 	}
 }
