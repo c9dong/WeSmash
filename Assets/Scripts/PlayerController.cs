@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
+	public int playerNumber;
+
 	public float verticalSpeed;             //Floating point variable to store the player's movement speed.
 	public float horizontalSpeed;
 	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
@@ -23,9 +25,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		//Get and store a reference to the Rigidbody2D component so that we can access it.
 		rb2d = GetComponent<Rigidbody2D> ();
-		orientation = !orientation;
-		transform.rotation = Quaternion.Euler (0, 0, orientation ? 180 : 0);
-		rb2d.gravityScale = orientation ? -3 : 3;
+		rb2d.gravityScale = 3;
 	}
 
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
@@ -42,34 +42,6 @@ public class PlayerController : MonoBehaviour {
 			return;
 		}
 
-		float j = Input.GetAxisRaw (jumpCtrl);
-		if (j != 0 && !jumped && !jumpHolding) {
-			jumped = true;
-			jumpHolding = true;
-			rb2d.velocity = new Vector2 (rb2d.velocity.x, orientation ? -verticalSpeed : verticalSpeed);
-		}
-		if (j == 0) {
-			jumpHolding = false;
-		}
-
-		float t = Input.GetAxisRaw (toggleCtrl);
-		if (t != 0 && !toggleHolding) {
-			toggleHolding = true;
-			orientation = !orientation;
-			transform.rotation = Quaternion.Euler (0, 0, orientation ? 180 : 0);
-			rb2d.gravityScale = orientation ? -3 : 3;
-		}
-		if (t == 0) {
-			toggleHolding = false;
-		}
-
-
-		float h = Input.GetAxis(horizontalCtrl);
-		if (h != 0.0)
-		{
-			rb2d.velocity = new Vector2(h*horizontalSpeed, rb2d.velocity.y);
-
-		}
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
@@ -82,5 +54,25 @@ public class PlayerController : MonoBehaviour {
 		} else if (collision.gameObject.CompareTag ("Floor")) {
 			jumped = false;
 		}
+	}
+
+	public void MoveHorizontal(int d) {
+		rb2d.velocity = new Vector2(d*horizontalSpeed, rb2d.velocity.y);
+	}
+
+	public void MoveVertical(int d) {
+		rb2d.velocity = new Vector2 (rb2d.velocity.x, d*verticalSpeed);
+	}
+
+	public void Jump() {
+		if (!jumped) {
+			jumped = true;
+			rb2d.velocity = new Vector2 (rb2d.velocity.x, (rb2d.gravityScale < 0) ? -verticalSpeed : verticalSpeed);
+		}
+	}
+
+	public void ToggleGravity() {
+		rb2d.gravityScale = -rb2d.gravityScale;
+		transform.rotation = Quaternion.Euler (0, 0, (rb2d.gravityScale < 0) ? 180 : 0);
 	}
 }
