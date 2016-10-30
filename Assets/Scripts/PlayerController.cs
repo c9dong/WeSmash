@@ -7,19 +7,26 @@ public class PlayerController : MonoBehaviour {
 
 	public float verticalSpeed;             //Floating point variable to store the player's movement speed.
 	public float horizontalSpeed;
-	public float stunTimeDuration;
 	public Sprite normalSprite;
 	public Sprite stunnedSprite;
 	public GameObject deadPlayer;
 
+	private static float stunDuration = 1.5f;
 	private static float defaultGravityScale = 3;
 	
 	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
 	private Animator animator;
 
-	private bool jumped = false;
-
 	private float stunTime = -1;
+	private bool jumped = false;
+	private GUIStyle style = new GUIStyle();
+
+	void OnGUI() {
+		style.normal.textColor = Color.white;
+		GUI.Label(new Rect(Camera.main.WorldToScreenPoint(gameObject.transform.position).x - 25, Screen.height - Camera.main.WorldToScreenPoint(gameObject.transform.position).y - 50, 20, 20), "Player " + playerNumber.ToString(), style);
+	}
+
+	private bool invincible = false;
 
 	// Use this for initialization
 	void Start()
@@ -57,16 +64,25 @@ public class PlayerController : MonoBehaviour {
 
 			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
 			sr.sprite = stunnedSprite;
-			this.stunTime = this.stunTimeDuration;
+			this.stunTime = PlayerController.stunDuration;
 		} else if (collision.gameObject.CompareTag ("Floor")) {
-			this.jumped = false;
+			jumped = false;
 		}
 	}
 
 	void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag ("Enemy")) { // Laser
+		if (collision.gameObject.CompareTag ("Enemy") && !invincible) { // Laser
 			GameObject deadLOL = Instantiate (deadPlayer, transform.position, Quaternion.identity) as GameObject;
 			DestroyObject (this.gameObject);
+		}
+		if (collision.gameObject.CompareTag ("Barrier")) {
+			invincible = true;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag ("Barrier")) {
+			invincible = false;
 		}
 	}
 
