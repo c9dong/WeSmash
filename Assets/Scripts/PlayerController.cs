@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour {
 
 	private float stunTime = -1;
 
+	private bool invincible = false;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -58,9 +60,18 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag ("Enemy")) { // Laser
+		if (collision.gameObject.CompareTag ("Enemy") && !invincible) { // Laser
 			GameObject deadLOL = Instantiate (deadPlayer, transform.position, Quaternion.identity) as GameObject;
 			DestroyObject (this.gameObject);
+		}
+		if (collision.gameObject.CompareTag ("Barrier")) {
+			invincible = true;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag ("Barrier")) {
+			invincible = false;
 		}
 	}
 
