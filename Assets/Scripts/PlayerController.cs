@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour {
 		GUI.Label(new Rect(Camera.main.WorldToScreenPoint(gameObject.transform.position).x - 25, Screen.height - Camera.main.WorldToScreenPoint(gameObject.transform.position).y - 50, 20, 20), "Player " + playerNumber.ToString(), style);
 	}
 
+	private bool invincible = false;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -64,9 +66,18 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag ("Enemy")) { // Laser
+		if (collision.gameObject.CompareTag ("Enemy") && !invincible) { // Laser
 			GameObject deadLOL = Instantiate (deadPlayer, transform.position, Quaternion.identity) as GameObject;
 			DestroyObject (this.gameObject);
+		}
+		if (collision.gameObject.CompareTag ("Barrier")) {
+			invincible = true;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag ("Barrier")) {
+			invincible = false;
 		}
 	}
 

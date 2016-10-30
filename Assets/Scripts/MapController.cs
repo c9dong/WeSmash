@@ -12,6 +12,7 @@ public class MapController : MonoBehaviour {
 	public GameObject player2;
 	public GameObject player3;
 	public GameObject projectile;
+	public GameObject barrier;
 
 	private float projectileTime = 0;
 	private static readonly float PROJECTILE_INTERVAL = 1; // Generate projectile every 2 seconds
@@ -19,6 +20,7 @@ public class MapController : MonoBehaviour {
 	private Transform platformHolder;
 	private Transform boardHolder;
 	private List<Vector3> gridPositions = new List<Vector3>();
+	private List<Vector3> walkablePlatforms = new List<Vector3>();
 
 	void initList() {
 		gridPositions.Clear ();
@@ -32,20 +34,16 @@ public class MapController : MonoBehaviour {
 	void setupFloor() {
 		boardHolder = GameObject.Find ("Map").transform;
 		for (int x = -columns/2; x < columns/2; x++) {
-			GameObject instance1 = Instantiate (floorTile, new Vector3 (x, -rows/2, 0f), Quaternion.identity) as GameObject;
-			GameObject instance2 = Instantiate (floorTile, new Vector3 (x, rows/2, 0f), Quaternion.identity) as GameObject;
+			Vector3 v1 = new Vector3 (x, -rows / 2, 0f);
+			Vector3 v2 = new Vector3 (x, rows / 2, 0f);
+			GameObject instance1 = Instantiate (floorTile, v1, Quaternion.identity) as GameObject;
+			GameObject instance2 = Instantiate (floorTile, v2, Quaternion.identity) as GameObject;
+
+			walkablePlatforms.Add(v1);
 
 			instance1.transform.SetParent (boardHolder);
 			instance2.transform.SetParent (boardHolder);
 		}
-
-//		for (int y = -rows / 2; y < rows / 2+1; y++) {
-//			GameObject instance1 = Instantiate (floorTile, new Vector3 (-columns/2, y, 0f), Quaternion.identity) as GameObject;
-//			GameObject instance2 = Instantiate (floorTile, new Vector3 (columns/2, y, 0f), Quaternion.identity) as GameObject;
-//
-//			instance1.transform.SetParent (boardHolder);
-//			instance2.transform.SetParent (boardHolder);
-//		}
 	}
 
 	void setupPlatform() {
@@ -76,7 +74,9 @@ public class MapController : MonoBehaviour {
 
 	void createPlatform (Transform parent, int x, int y, int length) {
 		for (int i=0; i<length; i++) {
-			GameObject instance = Instantiate (floorTile, new Vector3 (x+i, y, 0f), Quaternion.identity) as GameObject;
+			Vector3 v = new Vector3 (x + i, y, 0f);
+			GameObject instance = Instantiate (floorTile, v, Quaternion.identity) as GameObject;
+			walkablePlatforms.Add (v);
 			instance.transform.SetParent (parent);
 		}
 	}
@@ -110,10 +110,17 @@ public class MapController : MonoBehaviour {
 		}
 	}
 
+	void setupBarrier() {
+		int rand = Random.Range (0, walkablePlatforms.Count);
+		Vector3 plat = walkablePlatforms [rand];
+		Instantiate (barrier, new Vector3 (plat.x, plat.y + 1, plat.z), Quaternion.identity);
+	}
+
 	public void setupScene() {
 		setupFloor ();
 		setupPlatform ();
 		initPlayer ();
+		setupBarrier ();
 	}
 
 	void FixedUpdate() {
