@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour {
 	public float stunTime = 1.0f;
 	public Sprite normalSprite;
 	public Sprite stunnedSprite;
+	public GameObject deadPlayer;
 	private bool orientation = true;	//true means upright, false means upside down
 	private bool jumped = false;
 	private bool jumpHolding = false;
@@ -56,6 +57,13 @@ public class PlayerController : MonoBehaviour {
 			this.stunTime = 1.5f;
 		} else if (collision.gameObject.CompareTag ("Floor")) {
 			jumped = false;
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag ("Enemy")) { // Laser
+			GameObject deadLOL = Instantiate (deadPlayer, transform.position, Quaternion.identity) as GameObject;
+			DestroyObject (this.gameObject);
 		}
 	}
 
