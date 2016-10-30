@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour {
 	private static float defaultGravityScale = 3;
 	
 	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
-	private bool orientation = true;	//true means upright, false means upside down
+	private Animator animator;
+
 	private bool jumped = false;
 
 	private float stunTime = -1;
@@ -26,6 +27,8 @@ public class PlayerController : MonoBehaviour {
 		//Get and store a reference to the Rigidbody2D component so that we can access it.
 		rb2d = GetComponent<Rigidbody2D> ();
 		rb2d.gravityScale = defaultGravityScale;
+
+		animator = GetComponent<Animator> ();
 	}
 
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
@@ -35,6 +38,7 @@ public class PlayerController : MonoBehaviour {
 		if (this.stunTime < 0) {
 			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
 			sr.sprite = normalSprite;
+			animator.enabled = true;
 		}
 
 		// Continuous edges
@@ -49,6 +53,8 @@ public class PlayerController : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D collision) {
 		print ("collided");
 		if (collision.gameObject.CompareTag ("Player")) {
+			animator.enabled = false;
+
 			SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
 			sr.sprite = stunnedSprite;
 			this.stunTime = this.stunTimeDuration;
