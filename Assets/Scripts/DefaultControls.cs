@@ -32,10 +32,10 @@ public class DefaultControls {
 
 		// Player 3 keybindings
 		keyBindings[3] = new KeyBinding(
-			KeyCode.JoystickButton0, 
-			KeyCode.JoystickButton1, 
-			KeyCode.JoystickButton2, 
-			KeyCode.JoystickButton3);
+			KeyCode.JoystickButton16, 
+			KeyCode.JoystickButton17, 
+			KeyCode.JoystickButton7, 
+			KeyCode.JoystickButton8);
 	}
 
 	public static DefaultControls getInstance() {
