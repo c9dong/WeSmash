@@ -16,7 +16,8 @@ public class MapController : MonoBehaviour {
 	public GameObject barrier;
 
 	private float projectileTime = 0;
-	private static readonly float PROJECTILE_INTERVAL = 1; // Generate projectile every 2 seconds
+	private float PROJECTILE_INTERVAL = 2.5f;
+	private float frameCounter = 0;
 
 	private Transform platformHolder;
 	private Transform boardHolder;
@@ -88,7 +89,7 @@ public class MapController : MonoBehaviour {
 		projectileCtrl.isLeft = (Random.value >= 0.5);
 
 		float projectileX;
-		float projectileY = Random.Range (0, Screen.height);
+		float projectileY = Random.Range (1, Screen.height-1);
 		if (projectileCtrl.isLeft) {
 			projectileX = 0.0F; 
 			projectileObj.transform.position = Camera.current.ScreenToWorldPoint (new Vector3 (projectileX, projectileY, Camera.current.nearClipPlane));
@@ -125,9 +126,11 @@ public class MapController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (Time.time >= projectileTime && Camera.current != null) {
+		frameCounter = frameCounter + 0.04f;
+		if (frameCounter >= projectileTime && Camera.current != null) {
 			createProjectile();
 			projectileTime += PROJECTILE_INTERVAL;
+			PROJECTILE_INTERVAL = 2.5f - Mathf.Pow (2, Mathf.Min (Mathf.Log10 (projectileTime / 10), 1));
 		}
 	}
 }
