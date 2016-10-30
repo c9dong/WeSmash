@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 namespace Completed
 {
@@ -49,6 +50,12 @@ namespace Completed
 		void Update()
 		{
 			
+		}
+		void FixedUpdate()
+		{
+			if (Input.GetKeyDown (KeyCode.R)) {
+				SceneManager.LoadScene ("Main");
+			}
 		}
 	}
 }

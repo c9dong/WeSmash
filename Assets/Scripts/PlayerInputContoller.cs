@@ -13,7 +13,7 @@ public class PlayerInputContoller : MonoBehaviour {
 		int i = playerController.playerNumber;
 		keyBinding = DefaultControls.getInstance().getKeyBinding(i);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		// Up
