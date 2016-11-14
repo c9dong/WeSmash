@@ -84,9 +84,12 @@ public class MapController : MonoBehaviour {
 	}
 
 	public void createProjectile() {
-		GameObject projectileObj = Instantiate (projectile, new Vector3 (0, 0, 0), Quaternion.identity) as GameObject;
+		bool isLeft = Random.value >= 0.5;
+		GameObject projectileObj = Instantiate (
+			projectile, new Vector3 (0, 0, 0), 
+			isLeft ? Quaternion.identity : Quaternion.Euler (0, 0, 180) )as GameObject;
 		ProjectileController projectileCtrl = projectileObj.GetComponent<ProjectileController> ();
-		projectileCtrl.isLeft = (Random.value >= 0.5);
+		projectileCtrl.isLeft = isLeft;
 
 		float projectileX;
 		float projectileY = Random.Range (1, Screen.height-1);
